@@ -90,14 +90,22 @@ function keyPressed() {
 
   if (!matrix[pI][pJ]) return;
 
-  if (keyCode === LEFT_ARROW && !matrix[pI][pJ].walls[0]) {
+  if (keyCode === LEFT_ARROW) {
     player.move(0, -1);
-  } else if (keyCode === RIGHT_ARROW && !matrix[pI][pJ].walls[2]) {
+    player.lastDirection = "l";
+  } else if (keyCode === RIGHT_ARROW) {
+    player.lastDirection = "r";
     player.move(0, 1);
-  } else if (keyCode === UP_ARROW && !matrix[pI][pJ].walls[1]) {
+  } else if (keyCode === UP_ARROW) {
     player.move(-1, 0);
-  } else if (keyCode === DOWN_ARROW && !matrix[pI][pJ].walls[3]) {
+    player.lastDirection = "t";
+  } else if (keyCode === DOWN_ARROW) {
     player.move(1, 0);
+    player.lastDirection = "b";
+  } else  if (key === "a") {
+    matrix = player.removeWall(matrix)
+  }  else  if (key === "s") {
+    matrix = player.addWall(matrix)
   }
 }
 
