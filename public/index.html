@@ -16,11 +16,14 @@
         background-color: #1b1b1b;
       }
     </style>
+    <script src="https://cdn.socket.io/4.6.0/socket.io.min.js" integrity="sha384-c79GN5VsunZvi+Q/WObgk2in0CbZsHnjEqvFxC5DxHn9lTfNce2WW6h2pH6u/kF+" crossorigin="anonymous"></script>
+    
     <script src="./lib/p5.min.js"></script>
     <!-- <script src="../addons/p5.sound.js"></script> -->
-    <script src="cell.js"></script>
-    <script src="player.js"></script>
-    <script src="sketch.js"></script>
+    <script type="module" src="./classes/cell.js"></script>
+    <script type="module" src="./classes/maze.js"></script>
+    <script src="./classes/player.js"></script>
+    <script src="./sketch.js"></script>
   </head>
 
   <body>

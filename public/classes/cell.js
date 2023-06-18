@@ -1,4 +1,4 @@
-class Cell {
+export default class Cell {
   constructor(i, j, w) {
     this.y = i * w;
     this.x = j * w;
@@ -24,12 +24,12 @@ class Cell {
     return neighbors;
   }
 
-  draw() {
-    stroke(255);
-    fill(0);
-    if (this.walls[0]) line(this.x, this.y, this.x, this.y + this.w);
-    if (this.walls[1]) line(this.x, this.y, this.x + w, this.y);
-    if (this.walls[2]) line(this.x + w, this.y, this.x + w, this.y + this.w);
-    if (this.walls[3]) line(this.x, this.y + w, this.x + w, this.y + w);
-  }
+  // draw() {
+  //   stroke(255);
+  //   fill(0);
+  //   if (this.walls[0]) line(this.x, this.y, this.x, this.y + this.w);
+  //   if (this.walls[1]) line(this.x, this.y, this.x + w, this.y);
+  //   if (this.walls[2]) line(this.x + w, this.y, this.x + w, this.y + this.w);
+  //   if (this.walls[3]) line(this.x, this.y + w, this.x + w, this.y + w);
+  // }
 }
