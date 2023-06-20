@@ -9,13 +9,13 @@ app.use(express.static("public"));
 
 let server = app.listen(3000);
 
-let numRows = 15;
+let numRows = 20;
 let numCols = 20;
 let width = 30;
 let maze = new Maze(numRows, numCols, width);
 let goal = {
-  x: [Math.floor(Math.random() * 20)],
-  y: 13,
+  i: numRows - 2,
+  j: Math.floor(Math.random() * numCols),
 };
 
 let io = new Server(server);
@@ -24,15 +24,15 @@ io.sockets.on("connection", (socket) => {
   console.log("Nova conexão: " + socket.id);
   io.emit("maze", maze);
   io.emit("goal", goal);
-  io.to(socket.id).emit('id', io.engine.clientsCount);
+  io.to(socket.id).emit("id", socket.id);
 
   let playerColor = {
     r: Math.floor(Math.random() * 255),
     g: Math.floor(Math.random() * 255),
     b: Math.floor(Math.random() * 255),
-  }
+  };
 
-  io.to(socket.id).emit('color', playerColor);
+  io.to(socket.id).emit("color", playerColor);
 
   socket.on("mazeUpdate", (matrix) => {
     if (matrix && matrix != maze.matrix) {
@@ -43,8 +43,7 @@ io.sockets.on("connection", (socket) => {
 
   socket.on("pMove", (data) => {
     socket.broadcast.emit("pMove", data);
-    if(data.i == goal.y && data.j == goal.x){
-      goal.x = [Math.floor(Math.random() * 20)];
+    if (data.i == goal.i && data.j == goal.j) {
       socket.broadcast.emit("gameOver", true);
     }
   });

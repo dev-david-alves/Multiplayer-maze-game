@@ -1,12 +1,10 @@
 class Player {
-  constructor(i, j, color, wGrid, w, offsetX, offsetY, matrix, socket, id) {
+  constructor(i, j, color, wGrid, matrix, socket, id) {
     this.i = i;
     this.j = j;
     this.color = color;
-    this.w = w;
     this.wGrid = wGrid;
-    this.offsetX = offsetX;
-    this.offsetY = offsetY;
+    this.w = wGrid * 0.7;
     this.lastDirection = "r";
     this.wallsToAdd = 3;
     this.wallsToDestroy = 3;
@@ -61,7 +59,7 @@ class Player {
       this.wallsToDestroy -= 1;
     } else if (
       this.lastDirection == "b" &&
-      this.i + 1 < this.matrix[0].length &&
+      this.i + 1 < this.matrix.length &&
       this.matrix[this.i][this.j].walls[3]
     ) {
       this.matrix[this.i][this.j].walls[3] = false;
@@ -103,7 +101,7 @@ class Player {
       this.wallsToAdd -= 1;
     } else if (
       this.lastDirection == "b" &&
-      this.i + 1 < this.matrix[0].length &&
+      this.i + 1 < this.matrix.length &&
       !this.matrix[this.i][this.j].walls[3]
     ) {
       this.matrix[this.i][this.j].walls[3] = true;
@@ -124,9 +122,10 @@ class Player {
     return this.matrix;
   }
 
-  draw() {
-    let y = this.i * this.wGrid + this.offsetY + this.w / 2;
-    let x = this.j * this.wGrid + this.offsetX + this.w / 2;
+  draw() { 
+    let offset = this.w / 2 + (this.wGrid - this.w) / 2;
+    let y = this.i * this.wGrid + offset;
+    let x = this.j * this.wGrid + offset;
 
     noStroke();
     fill(this.color.r, this.color.g, this.color.b);
@@ -142,9 +141,7 @@ class Player {
       i: this.i,
       j: this.j,
       wGrid: this.wGrid,
-      w: this.w,
-      offsetX: this.offsetX,
-      offsetY: this.offsetY,
+      wP: this.w,
       lastDirection: this.lastDirection,
     };
 

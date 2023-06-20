@@ -1,7 +1,9 @@
 export default class Cell {
   constructor(i, j, w) {
-    this.y = i * w;
-    this.x = j * w;
+    // this.y = i * w;
+    // this.x = j * w;
+    this.i = i;
+    this.j = j;
     this.w = w;
     this.visited = false;
     this.walls = [true, true, true, true];
