@@ -22,17 +22,10 @@ let io = new Server(server);
 
 io.sockets.on("connection", (socket) => {
   console.log("Nova conexão: " + socket.id);
+
   io.emit("maze", maze);
   io.emit("goal", goal);
   io.to(socket.id).emit("id", socket.id);
-
-  let playerColor = {
-    r: Math.floor(Math.random() * 255),
-    g: Math.floor(Math.random() * 255),
-    b: Math.floor(Math.random() * 255),
-  };
-
-  io.to(socket.id).emit("color", playerColor);
 
   socket.on("mazeUpdate", (matrix) => {
     if (matrix && matrix != maze.matrix) {

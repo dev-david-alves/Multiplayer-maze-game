@@ -3,16 +3,8 @@ let maze;
 let player;
 let otherPlayer;
 let goal;
-
-let playerColor = {
-  r: Math.floor(Math.random() * 255),
-  g: Math.floor(Math.random() * 255),
-  b: Math.floor(Math.random() * 255),
-};
-
 let gameOver = false;
 let win = false;
-
 let w = 30;
 let numRows = 20;
 let numCols = 20;
@@ -26,7 +18,6 @@ function setup() {
     player = new Player(
       Math.floor(Math.random() * 3),
       Math.floor(Math.random() * numCols),
-      playerColor,
       w,
       undefined,
       socket
@@ -48,7 +39,6 @@ function setup() {
   socket.on("goal", (data) => (goal = data));
   socket.on("gameOver", (data) => (gameOver = data));
   socket.on("id", (data) => (player.id = data));
-  socket.on("color", (data) => (player.color = data));
 }
 
 function drawPlayers(data) {
@@ -61,7 +51,7 @@ function drawOtherPlayer(data) {
   let x = data.j * data.wGrid + offset;
 
   noStroke();
-  fill(255, 100, 100);
+  fill(255, 100, 0);
   if (data.lastDirection == "r") arc(x, y, data.wP, data.wP, PI / 6, -PI / 6);
   else if (data.lastDirection == "l")
     arc(x, y, data.wP, data.wP, PI + PI / 6, PI - PI / 6);
@@ -168,18 +158,13 @@ function draw() {
             maze.matrix[i][j].i * maze.w + w
           );
       }
-
-      if (otherPlayer) drawOtherPlayer(otherPlayer);
     }
+
+    if (otherPlayer) drawOtherPlayer(otherPlayer);
+
     noStroke();
     fill(0, 0, 255);
     rect(goal.j * w + 5, goal.i * w + 5, w - 10, w - 10);
-
-    if (player.wallsToAdd == 0) {
-      setTimeout(() => (player.wallsToAdd = 3), 1000);
-    } else if (player.wallsToDestroy == 0) {
-      setTimeout(() => (player.wallsToDestroy = 3), 1000);
-    }
 
     if (gameOver) {
       textSize(40);
@@ -194,9 +179,16 @@ function draw() {
       text("Você venceu!", (w * maze.numCols) / 4, (w * maze.numRows) / 2);
       noLoop();
     }
+
     noFill();
     strokeWeight(3);
     stroke(255);
     rect(0, 0, w * maze.numCols, w * maze.numRows);
+
+    if (player.wallsToAdd == 0) {
+      setTimeout(() => (player.wallsToAdd = 3), 1000);
+    } else if (player.wallsToDestroy == 0) {
+      setTimeout(() => (player.wallsToDestroy = 3), 1000);
+    }
   }
 }

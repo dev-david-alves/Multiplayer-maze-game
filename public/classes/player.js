@@ -1,16 +1,16 @@
 class Player {
-  constructor(i, j, color, wGrid, matrix, socket, id) {
+  constructor(i, j, wGrid, matrix, socket, id) {
     this.i = i;
     this.j = j;
-    this.color = color;
     this.wGrid = wGrid;
     this.w = wGrid * 0.7;
-    this.lastDirection = "r";
-    this.wallsToAdd = 3;
-    this.wallsToDestroy = 3;
     this.matrix = matrix;
     this.socket = socket;
     this.id = id;
+    this.wallsToAdd = 3;
+    this.wallsToDestroy = 3;
+    this.lastDirection = "r";
+    this.color = { r: 0, g: 255, b: 100 };
   }
 
   move(i, j) {
@@ -24,18 +24,6 @@ class Player {
       (i > 0 && !this.matrix[this.i][this.j].walls[3])
     )
       this.i += i;
-
-    let data = {
-      i: this.i,
-      j: this.j,
-      wGrid: this.wGrid,
-      w: this.w,
-      offsetX: this.offsetX,
-      offsetY: this.offsetY,
-      lastDirection: this.lastDirection,
-    };
-
-    this.socket.emit("pMove", data);
   }
 
   removeWall() {
@@ -122,7 +110,7 @@ class Player {
     return this.matrix;
   }
 
-  draw() { 
+  draw() {
     let offset = this.w / 2 + (this.wGrid - this.w) / 2;
     let y = this.i * this.wGrid + offset;
     let x = this.j * this.wGrid + offset;

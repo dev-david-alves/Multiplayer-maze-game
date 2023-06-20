@@ -48,14 +48,6 @@ export default class Maze {
     }
   }
 
-  // drawMaze() {
-  //   for (let i = 0; i < numRows; i++) {
-  //     for (let j = 0; j < numCols; j++) {
-  //       this.matrix[i][j].draw();
-  //     }
-  //   }
-  // }
-
   generateNewDirection(i, j, neighbors) {
     let index = parseInt(Math.random() * neighbors.length);
     let neighbor = neighbors[index];
