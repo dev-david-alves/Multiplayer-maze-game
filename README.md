@@ -4,5 +4,5 @@ Consiste em um jogo de labirinto multiplayer utilizando sockets. Ganha quem cheg
 
 Feito utilizando P5.js, NodeJs e Socket.io.
 
-autor: David Alves Soares - 5° Semestre.
+Autor: David Alves Soares - 5° Semestre.
 Universidade Federal do Ceará - Campus Quixadá.
