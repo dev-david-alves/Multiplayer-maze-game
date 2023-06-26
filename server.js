@@ -10,7 +10,7 @@ app.use(express.static("public"));
 let server = app.listen(3000);
 
 let numRows = 20;
-let numCols = 20;
+let numCols = 40;
 let width = 30;
 let maze = new Maze(numRows, numCols, width);
 let goal = {

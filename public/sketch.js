@@ -5,9 +5,6 @@ let otherPlayer;
 let goal;
 let gameOver = false;
 let win = false;
-let w = 30;
-let numRows = 20;
-let numCols = 20;
 
 function setup() {
   socket = io.connect("http://localhost:3000");
@@ -17,17 +14,19 @@ function setup() {
     console.log("Conectado ao servidor");
     player = new Player(
       Math.floor(Math.random() * 3),
-      Math.floor(Math.random() * numCols),
-      w,
+      Math.floor(Math.random() * 20),
+      30,
       undefined,
       socket
     );
 
     socket.on("maze", (data) => {
       maze = data;
-      createCanvas(w * maze.numCols + 1, w * maze.numRows + 1);
+      createCanvas(maze.w * maze.numCols + 1, maze.w * maze.numRows + 1);
 
       player.matrix = maze.matrix;
+      player.j = Math.floor(Math.random() * 20);
+      player.w = maze.w;
     });
 
     socket.on("mazeUpdate", (data) => {
@@ -140,22 +139,22 @@ function draw() {
           line(
             maze.matrix[i][j].j * maze.w,
             maze.matrix[i][j].i * maze.w,
-            maze.matrix[i][j].j * maze.w + w,
+            maze.matrix[i][j].j * maze.w + maze.w,
             maze.matrix[i][j].i * maze.w
           );
         if (maze.matrix[i][j].walls[2])
           line(
-            maze.matrix[i][j].j * maze.w + w,
+            maze.matrix[i][j].j * maze.w + maze.w,
             maze.matrix[i][j].i * maze.w,
-            maze.matrix[i][j].j * maze.w + w,
+            maze.matrix[i][j].j * maze.w + maze.w,
             maze.matrix[i][j].i * maze.w + maze.matrix[i][j].w
           );
         if (maze.matrix[i][j].walls[3])
           line(
             maze.matrix[i][j].j * maze.w,
-            maze.matrix[i][j].i * maze.w + w,
-            maze.matrix[i][j].j * maze.w + w,
-            maze.matrix[i][j].i * maze.w + w
+            maze.matrix[i][j].i * maze.w + maze.w,
+            maze.matrix[i][j].j * maze.w + maze.w,
+            maze.matrix[i][j].i * maze.w + maze.w
           );
       }
     }
@@ -164,26 +163,39 @@ function draw() {
 
     noStroke();
     fill(0, 0, 255);
-    rect(goal.j * w + 5, goal.i * w + 5, w - 10, w - 10);
+    rect(goal.j * maze.w + 5, goal.i * maze.w + 5, maze.w - 10, maze.w - 10);
+
+    
+    textSize(40);
+    textStyle(BOLD);
+    textFont("Arial");
+    const centerX = width / 2;
+    const centerY = height / 2;
 
     if (gameOver) {
-      textSize(40);
-      textStyle(BOLD);
+      textAlign(CENTER, CENTER);
       fill(255, 0, 0);
-      text("Você perdeu!", (w * maze.numCols) / 4, (w * maze.numRows) / 2);
+      text(
+        "Você perdeu!",
+        centerX,
+        centerY
+      );
       noLoop();
     } else if (player.j == goal.j && player.i == goal.i) {
-      textSize(40);
-      textStyle(BOLD);
+      textAlign(CENTER, CENTER);
       fill(0, 255, 0);
-      text("Você venceu!", (w * maze.numCols) / 4, (w * maze.numRows) / 2);
+      text(
+        "Você venceu!",
+        centerX,
+        centerY
+      );
       noLoop();
     }
 
     noFill();
     strokeWeight(3);
     stroke(255);
-    rect(0, 0, w * maze.numCols, w * maze.numRows);
+    rect(0, 0, maze.w * maze.numCols, maze.w * maze.numRows);
 
     if (player.wallsToAdd == 0) {
       setTimeout(() => (player.wallsToAdd = 3), 1000);
