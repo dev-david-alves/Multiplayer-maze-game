@@ -3,14 +3,14 @@ class Player {
     this.i = i;
     this.j = j;
     this.wGrid = wGrid;
-    this.w = wGrid * 0.7;
+    this.w = wGrid * 0.8;
     this.matrix = matrix;
     this.socket = socket;
     this.id = id;
     this.wallsToAdd = 3;
     this.wallsToDestroy = 3;
     this.lastDirection = "r";
-    this.color = { r: 0, g: 255, b: 100 };
+    this.color = { r: 255, g: 255, b: 255 };
   }
 
   move(i, j) {

@@ -10,7 +10,7 @@ app.use(express.static("public"));
 let server = app.listen(3000);
 
 let numRows = 20;
-let numCols = 40;
+let numCols = 20;
 let width = 30;
 let maze = new Maze(numRows, numCols, width);
 let goal = {
@@ -19,6 +19,8 @@ let goal = {
 };
 
 let io = new Server(server);
+
+let playersPos = {};
 
 io.sockets.on("connection", (socket) => {
   console.log("Nova conexão: " + socket.id);
@@ -35,11 +37,18 @@ io.sockets.on("connection", (socket) => {
   });
 
   socket.on("pMove", (data) => {
-    socket.broadcast.emit("pMove", data);
+    // socket.broadcast.emit("pMove", data);
+    playersPos[socket.id] = data;
+    io.emit("pMove", playersPos);
+
     if (data.i == goal.i && data.j == goal.j) {
       socket.broadcast.emit("gameOver", true);
     }
   });
-});
 
-console.log("Servidor rodando!");
+  socket.on("disconnect", () => {
+    console.log("Desconectado: " + socket.id);
+    delete playersPos[socket.id];
+    io.emit("pMove", playersPos);
+  });
+});

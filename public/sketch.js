@@ -1,7 +1,7 @@
 let socket;
 let maze;
 let player;
-let otherPlayer;
+let otherPlayers;
 let goal;
 let gameOver = false;
 let win = false;
@@ -17,7 +17,8 @@ function setup() {
       Math.floor(Math.random() * 20),
       30,
       undefined,
-      socket
+      socket,
+      0
     );
 
     socket.on("maze", (data) => {
@@ -26,7 +27,8 @@ function setup() {
 
       player.matrix = maze.matrix;
       player.j = Math.floor(Math.random() * 20);
-      player.w = maze.w;
+      player.wGrid = maze.w;
+      player.w = maze.w * 0.8;
     });
 
     socket.on("mazeUpdate", (data) => {
@@ -41,23 +43,46 @@ function setup() {
 }
 
 function drawPlayers(data) {
-  otherPlayer = data;
+  otherPlayers = data;
 }
 
-function drawOtherPlayer(data) {
-  let offset = data.wP / 2 + (data.wGrid - data.wP) / 2;
-  let y = data.i * data.wGrid + offset;
-  let x = data.j * data.wGrid + offset;
+function drawOtherPlayers(data) {
+  if (!data) return;
 
-  noStroke();
-  fill(255, 100, 0);
-  if (data.lastDirection == "r") arc(x, y, data.wP, data.wP, PI / 6, -PI / 6);
-  else if (data.lastDirection == "l")
-    arc(x, y, data.wP, data.wP, PI + PI / 6, PI - PI / 6);
-  else if (data.lastDirection == "t")
-    arc(x, y, data.wP, data.wP, -PI / 3, PI + PI / 3);
-  else if (data.lastDirection == "b")
-    arc(x, y, data.wP, data.wP, PI - PI / 3, PI / 3);
+  let colors = [
+    { r: 0, g: 100, b: 255 },
+    { r: 255, g: 0, b: 100 },
+    { r: 255, g: 100, b: 0 },
+    { r: 100, g: 0, b: 255 },
+    { r: 100, g: 255, b: 0 },
+    { r: 0, g: 255, b: 100 },
+    { r: 0, g: 100, b: 255 },
+    { r: 255, g: 0, b: 100 },
+    { r: 255, g: 100, b: 0 },
+  ];
+
+  let index = 0;
+
+  for (let id in data) {
+    if (id == player.id) continue;
+    let p = data[id];
+
+    let offset = p.wP / 2 + (p.wGrid - p.wP) / 2;
+    let y = p.i * p.wGrid + offset;
+    let x = p.j * p.wGrid + offset;
+
+    noStroke();
+    fill(colors[index].r, colors[index].g, colors[index].b);
+    if (p.lastDirection == "r") arc(x, y, p.wP, p.wP, PI / 6, -PI / 6);
+    else if (p.lastDirection == "l")
+      arc(x, y, p.wP, p.wP, PI + PI / 6, PI - PI / 6);
+    else if (p.lastDirection == "t")
+      arc(x, y, p.wP, p.wP, -PI / 3, PI + PI / 3);
+    else if (p.lastDirection == "b") arc(x, y, p.wP, p.wP, PI - PI / 3, PI / 3);
+
+    index++;
+    if (index >= colors.length) index = 0;
+  }
 }
 
 function keyPressed() {
@@ -159,13 +184,12 @@ function draw() {
       }
     }
 
-    if (otherPlayer) drawOtherPlayer(otherPlayer);
+    if (otherPlayers) drawOtherPlayers(otherPlayers);
 
     noStroke();
     fill(0, 0, 255);
     rect(goal.j * maze.w + 5, goal.i * maze.w + 5, maze.w - 10, maze.w - 10);
 
-    
     textSize(40);
     textStyle(BOLD);
     textFont("Arial");
@@ -175,20 +199,12 @@ function draw() {
     if (gameOver) {
       textAlign(CENTER, CENTER);
       fill(255, 0, 0);
-      text(
-        "Você perdeu!",
-        centerX,
-        centerY
-      );
+      text("Você perdeu!", centerX, centerY);
       noLoop();
     } else if (player.j == goal.j && player.i == goal.i) {
       textAlign(CENTER, CENTER);
       fill(0, 255, 0);
-      text(
-        "Você venceu!",
-        centerX,
-        centerY
-      );
+      text("Você venceu!", centerX, centerY);
       noLoop();
     }
 
@@ -198,9 +214,9 @@ function draw() {
     rect(0, 0, maze.w * maze.numCols, maze.w * maze.numRows);
 
     if (player.wallsToAdd == 0) {
-      setTimeout(() => (player.wallsToAdd = 3), 1000);
+      setTimeout(() => (player.wallsToAdd = 3), 5000);
     } else if (player.wallsToDestroy == 0) {
-      setTimeout(() => (player.wallsToDestroy = 3), 1000);
+      setTimeout(() => (player.wallsToDestroy = 3), 30000);
     }
   }
 }
