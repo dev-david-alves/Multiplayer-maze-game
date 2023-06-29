@@ -1,13 +1,13 @@
 import express from "express";
 import cors from "cors";
 import { Server } from "socket.io";
+import { createServer } from "http";
 import Maze from "./public/classes/maze.js";
 
 let app = express();
+const httpServer = createServer(app);
 app.use(cors());
 app.use(express.static("public"));
-
-let server = app.listen(3000);
 
 let numRows = 20;
 let numCols = 20;
@@ -18,7 +18,7 @@ let goal = {
   j: Math.floor(Math.random() * numCols),
 };
 
-let io = new Server(server);
+let io = new Server(httpServer);
 
 let playersPos = {};
 
@@ -50,4 +50,9 @@ io.sockets.on("connection", (socket) => {
     delete playersPos[socket.id];
     io.emit("pMove", playersPos);
   });
+});
+
+const port = 3000;
+httpServer.listen(port, "0.0.0.0", () => {
+  console.log(`Servidor rodando na porta ${port}`);
 });

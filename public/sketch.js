@@ -5,9 +5,9 @@ let otherPlayers;
 let goal;
 let gameOver = false;
 let win = false;
-
+let canvas;
 function setup() {
-  socket = io.connect("http://localhost:3000");
+  socket = io.connect("http://192.168.0.5:3000");
   textFont("Arial");
 
   socket.on("connect", () => {
@@ -23,12 +23,31 @@ function setup() {
 
     socket.on("maze", (data) => {
       maze = data;
-      createCanvas(maze.w * maze.numCols + 1, maze.w * maze.numRows + 60);
+      canvas = createCanvas(
+        maze.w * maze.numCols + 1,
+        maze.w * maze.numRows + 60
+      );
+      canvas.touchEnded(touchEndedTeste);
+      canvas.touchMoved(touchMovedTeste);
 
       player.matrix = maze.matrix;
       player.j = Math.floor(Math.random() * 20);
       player.wGrid = maze.w;
       player.w = maze.w * 0.8;
+
+      button = createButton("Adicionar");
+      button.position(
+        maze.w * (maze.matrix[0].length - 3),
+        maze.w * maze.matrix.length + 20
+      );
+      button.mousePressed(addWall);
+
+      button = createButton("Remover");
+      button.position(
+        maze.w * maze.matrix[0].length,
+        maze.w * maze.matrix.length + 20
+      );
+      button.mousePressed(removeWall);
     });
 
     socket.on("mazeUpdate", (data) => {
@@ -48,6 +67,72 @@ function setup() {
   setInterval(() => {
     if (player) player.wallsToDestroy = 3;
   }, 30000);
+}
+
+function addWall() {
+  maze.matrix = player.addWall();
+}
+
+function removeWall() {
+  maze.matrix = player.removeWall();
+}
+
+let preMovimentX = 0;
+let preMovimentY = 0;
+let movimentX = 0;
+let movimentY = 0;
+let touchStartedNow = false;
+
+function touchMovedTeste() {
+  if (!touchStartedNow) {
+    preMovimentX = mouseX;
+    preMovimentY = mouseY;
+    touchStartedNow = true;
+  }
+  movimentX = mouseX;
+  movimentY = mouseY;
+}
+
+function isMobileDevice() {
+  return /Mobi|Android/i.test(navigator.userAgent);
+}
+
+function touchEndedTeste() {
+  touchStartedNow = false;
+  let pI = player.i;
+  let pJ = player.j;
+
+  movimentX = mouseX;
+  movimentY = mouseY;
+
+  if (!maze.matrix[pI][pJ]) return;
+
+  let moveX = movimentX - preMovimentX;
+  let moveY = movimentY - preMovimentY;
+
+  if (moveX < 0 && Math.abs(moveX) >= 60) {
+    player.move(0, -1);
+    player.lastDirection = "l";
+  } else if (moveX > 0 && Math.abs(moveX) >= 60) {
+    player.lastDirection = "r";
+    player.move(0, 1);
+  } else if (moveY < 0 && Math.abs(moveY) >= 60) {
+    player.move(-1, 0);
+    player.lastDirection = "t";
+  } else if (moveY > 0 && Math.abs(moveY) >= 60) {
+    player.move(1, 0);
+    player.lastDirection = "b";
+  }
+
+  preMovimentX = 0;
+  preMovimentY = 0;
+  movimentX = 0;
+  movimentY = 0;
+  //  else if (key === "s") {
+  //   maze.matrix = player.removeWall();
+  // } else if (key === "a") {
+  //   maze.matrix = player.addWall();
+  // }
 }
 
 function drawPlayers(data) {
