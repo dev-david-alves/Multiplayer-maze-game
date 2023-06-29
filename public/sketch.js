@@ -66,7 +66,7 @@ function setup() {
 
   setInterval(() => {
     if (player) player.wallsToDestroy = 3;
-  }, 30000);
+  }, 20000);
 }
 
 function addWall() {
@@ -111,28 +111,23 @@ function touchEndedTeste() {
   let moveY = movimentY - preMovimentY;
 
   if (moveX < 0 && Math.abs(moveX) >= 60) {
-    player.move(0, -1);
-    player.lastDirection = "l";
+    if (player.lastDirection == "l") player.move(0, -1);
+    else player.lastDirection = "l";
   } else if (moveX > 0 && Math.abs(moveX) >= 60) {
-    player.lastDirection = "r";
-    player.move(0, 1);
+    if (player.lastDirection == "r") player.move(0, 1);
+    else player.lastDirection = "r";
   } else if (moveY < 0 && Math.abs(moveY) >= 60) {
-    player.move(-1, 0);
-    player.lastDirection = "t";
+    if (player.lastDirection == "t") player.move(-1, 0);
+    else player.lastDirection = "t";
   } else if (moveY > 0 && Math.abs(moveY) >= 60) {
-    player.move(1, 0);
-    player.lastDirection = "b";
+    if (player.lastDirection == "b") player.move(1, 0);
+    else player.lastDirection = "b";
   }
 
   preMovimentX = 0;
   preMovimentY = 0;
   movimentX = 0;
   movimentY = 0;
-  //  else if (key === "s") {
-  //   maze.matrix = player.removeWall();
-  // } else if (key === "a") {
-  //   maze.matrix = player.addWall();
-  // }
 }
 
 function drawPlayers(data) {
@@ -185,17 +180,17 @@ function keyPressed() {
   if (!maze.matrix[pI][pJ]) return;
 
   if (keyCode === LEFT_ARROW) {
-    player.move(0, -1);
-    player.lastDirection = "l";
+    if (player.lastDirection == "l") player.move(0, -1);
+    else player.lastDirection = "l";
   } else if (keyCode === RIGHT_ARROW) {
-    player.lastDirection = "r";
-    player.move(0, 1);
+    if (player.lastDirection == "r") player.move(0, 1);
+    else player.lastDirection = "r";
   } else if (keyCode === UP_ARROW) {
-    player.move(-1, 0);
-    player.lastDirection = "t";
+    if (player.lastDirection == "t") player.move(-1, 0);
+    else player.lastDirection = "t";
   } else if (keyCode === DOWN_ARROW) {
-    player.move(1, 0);
-    player.lastDirection = "b";
+    if (player.lastDirection == "b") player.move(1, 0);
+    else player.lastDirection = "b";
   } else if (key === "s") {
     maze.matrix = player.removeWall();
   } else if (key === "a") {
