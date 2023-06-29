@@ -23,7 +23,7 @@ function setup() {
 
     socket.on("maze", (data) => {
       maze = data;
-      createCanvas(maze.w * maze.numCols + 1, maze.w * maze.numRows + 1);
+      createCanvas(maze.w * maze.numCols + 1, maze.w * maze.numRows + 60);
 
       player.matrix = maze.matrix;
       player.j = Math.floor(Math.random() * 20);
@@ -40,6 +40,14 @@ function setup() {
   socket.on("goal", (data) => (goal = data));
   socket.on("gameOver", (data) => (gameOver = data));
   socket.on("id", (data) => (player.id = data));
+
+  setInterval(() => {
+    if (player) player.wallsToAdd = 3;
+  }, 10000);
+
+  setInterval(() => {
+    if (player) player.wallsToDestroy = 3;
+  }, 30000);
 }
 
 function drawPlayers(data) {
@@ -111,23 +119,45 @@ function keyPressed() {
 }
 
 function drawPlayerInfor(player) {
-  textSize(14);
-  textStyle(BOLD);
-  // Criar
-  fill(255);
-  text("Você ainda pode criar", 20, 20);
-  fill(0, 255, 0);
-  text(player.wallsToAdd, 170, 20);
-  fill(255);
-  text("paredes.", 185, 20);
+  if (player.matrix) {
+    textSize(14);
+    textStyle(BOLD);
+    // Criar
+    fill(255);
+    text("Você ainda pode criar", 0, player.wGrid * player.matrix.length + 20);
+    if (player.wallsToAdd > 0) {
+      fill(0, 255, 0);
+    } else {
+      fill(255, 0, 0);
+    }
+    text(player.wallsToAdd, 150, player.wGrid * player.matrix.length + 20);
+    fill(255);
+    text(
+      "paredes. \t\t\t\t\t  Tecla (a)",
+      162,
+      player.wGrid * player.matrix.length + 20
+    );
 
-  // Destruir
-  fill(255);
-  text("Você ainda pode destruir", 20, 40);
-  fill(0, 255, 0);
-  text(player.wallsToDestroy, 190, 40);
-  fill(255);
-  text("paredes.", 205, 40);
+    // Destruir
+    fill(255);
+    text(
+      "Você ainda pode destruir",
+      0,
+      player.wGrid * player.matrix.length + 40
+    );
+    if (player.wallsToDestroy > 0) {
+      fill(0, 255, 0);
+    } else {
+      fill(255, 0, 0);
+    }
+    text(player.wallsToDestroy, 170, player.wGrid * player.matrix.length + 40);
+    fill(255);
+    text(
+      "paredes. \t\t\t Tecla (s)",
+      182,
+      player.wGrid * player.matrix.length + 40
+    );
+  }
 }
 
 function draw() {
@@ -212,11 +242,5 @@ function draw() {
     strokeWeight(3);
     stroke(255);
     rect(0, 0, maze.w * maze.numCols, maze.w * maze.numRows);
-
-    if (player.wallsToAdd == 0) {
-      setTimeout(() => (player.wallsToAdd = 3), 5000);
-    } else if (player.wallsToDestroy == 0) {
-      setTimeout(() => (player.wallsToDestroy = 3), 30000);
-    }
   }
 }

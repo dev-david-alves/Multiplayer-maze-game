@@ -37,7 +37,6 @@ io.sockets.on("connection", (socket) => {
   });
 
   socket.on("pMove", (data) => {
-    // socket.broadcast.emit("pMove", data);
     playersPos[socket.id] = data;
     io.emit("pMove", playersPos);
 
