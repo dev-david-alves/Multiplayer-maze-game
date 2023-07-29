@@ -12,9 +12,10 @@ Sobre o projeto
   - Utiliza a biblioteca Socket.io para o multiplayer
   - Se divide em Servidor e Cliente
   - Servidor feito utilizando Node.js
+  - OBS: lembre-se de mudar para o IP da sua máquina
 
 ## Imagem do projeto
-<img src="https://github.com/dev-david-alves/Fractal-Tree-P5js/blob/main/Fractal_Tree/images/fractal_tree_01.png?raw=true" alt="Fractal Tree" style="width: 400px" />
+<img src="https://github.com/dev-david-alves/Multiplayer-maze-game/blob/main/Gameplay%20image.png?raw=true" alt="Imagem da gameplay" style="width: 400px" />
 
 ![p5js](https://img.shields.io/badge/p5.js-ED225D?style=for-the-badge&logo=p5.js&logoColor=FFFFFF)
 ![Socket.io](https://img.shields.io/badge/Socket.io-black?style=for-the-badge&logo=socket.io&badgeColor=010101)
