@@ -11,8 +11,8 @@ Sobre o projeto
   - Utiliza a biblioteca P5.js para renderização do jogo
   - Utiliza a biblioteca Socket.io para o multiplayer
   - Se divide em Servidor e Cliente
-  - Servidor feito utilizando Node.js
-  - OBS: lembre-se de mudar para o IP da sua máquina
+  - Servidor é feito utilizando Node.js
+  - OBS: lembre-se de mudar para o IP da sua máquina no arquivo public/sketch.js
 
 ## Imagem do projeto
 <img src="https://github.com/dev-david-alves/Multiplayer-maze-game/blob/main/Gameplay%20image.png?raw=true" alt="Imagem da gameplay" style="width: 400px" />
